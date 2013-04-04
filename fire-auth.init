@@ -1,0 +1,51 @@
+#! /bin/sh
+
+# Author: akshay2000
+# Basis: Init script skeleton
+# Fixes: None yet
+# Contact: http://indestructible.in
+# Version: 1.0
+
+### BEGIN INIT INFO
+# Provides:          fireauth
+# Required-Start:    $local_fs $network $remote_fs
+# Required-Stop:     $local_fs $network $remote_fs
+# Should-Start:      $NetworkManager
+# Should-Stop:       $NetworkManager
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: starts and stops firewall authentication script
+# Description:       Specific to IITK
+### END INIT INFO
+ 
+#Required -- Must Be Changed!
+USER="USERNAME" #Set Linux Mint, Ubuntu, or Debian user name here.
+PID=0
+ 
+#Script -- No changes needed below.
+case "$1" in
+  start)
+    #Start firewall authentication script.
+    echo "Starting firewall authenticator"
+    exp="python /home/$USER/firewall-auth.py"
+    $exp > /home/$USER/fireauthlog.txt 2>&1 &
+    PID=$!
+	#Store PID of the process for further use in stop
+    echo $PID > /home/$USER/fireauth.tmp
+    ;;
+  stop)
+	#Retrive PID from the file
+    PID=`cat /home/$USER/fireauth.tmp`
+    echo "Trying to stop script"
+    echo $PID
+    sleep 2s
+	#Send the kill signal
+    kill $PID
+    ;;
+  *)
+    echo "Usage: $0 {start|stop}"
+    exit 1
+    ;;
+esac
+ 
+exit 0
